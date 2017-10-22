@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>BDD 2 tables</title>
+    </h:head>
+    
+    <h:body>
+        <h:form id="form">
+            <p:dataTable id="checkBoxEtu" var="e" value="#{simonCtrl.etudiants}" selection="#{simonCtrl.selectedEtu}" rowKey="#{e.idE}">
+                <f:facet name="header">
+                   Liste des étudiants
+                </f:facet>
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                <p:column headerText="Id">
+                    <h:outputText value="#{e.idE}" />
+                </p:column>
+                <p:column headerText="Prénom">
+                    <h:outputText value="#{e.prenomE}" />
+                </p:column>
+                <p:column headerText="Nom">
+                    <h:outputText value="#{e.nomE}" />
+                </p:column>
+                <p:column headerText="Age">
+                    <h:outputText value="#{e.ageE}" />
+                </p:column>
+                <p:column headerText="Promotion">
+                    <h:outputText value="#{e.idPromo.nomPromo}" />
+                </p:column>
+                <p:column headerText="Filière">
+                    <h:outputText value="#{e.idPromo.filiere}" />
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton                         
+                        value="Supprimer" 
+                        update=":etuSupDialog" 
+                        oncomplete="PF('ESD').show()"                        
+                        >                           
+                    </p:commandButton>
+                </f:facet>                
+            </p:dataTable>
+        </h:form>
+            
+        <p:dialog id="etuSupDialog" widgetVar="ESD" header="Voulez-vous vraiment supprimer cet/ces étudiant(s) ?" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <h:form>
+                <p:outputPanel style="text-align:center;">
+                    <ui:repeat value="#{simonCtrl.selectedEtu}" var="etu">
+                        <h:outputText value="#{etu.prenomE} #{etu.nomE}" style="display:block"/>
+                    </ui:repeat>
+                </p:outputPanel>
+                <p:separator/>
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <p:commandButton value="Oui" action="#{simonCtrl.removeEtudiant()}" update=":form" oncomplete="PF('ESD').hide()" />
+                <p:commandButton value="Non" update=":form" oncomplete="PF('ESD').hide()"/>                            
+            </h:form>               
+        </p:dialog>                
+                    
+    <h:form>
+        <p:panel header="Ajouter un élève" style="margin-bottom:10px;">
+            <h:panelGrid columns="2" cellpadding="5">
+                
+                <p:outputLabel value="Prénom : " />
+                <p:inputText value="#{simonCtrl.e.prenomE}"/>
+                
+                <p:outputLabel value="Nom : " />
+                <p:inputText value="#{simonCtrl.e.nomE}"/>
+                
+                <p:outputLabel value="Age : " />
+                <p:inputText value="#{simonCtrl.e.ageE}"/>
+                
+                <p:outputLabel value="Promotion : " />
+                <p:selectOneMenu id="promotion" value="#{simonCtrl.selectedP}" style="width:150px">
+                    <f:selectItems value="#{simonCtrl.promos}"/>
+                </p:selectOneMenu>
+                
+                <p:outputLabel value="Filière : " />
+                <p:selectOneMenu id="filiere" value="#{simonCtrl.selectedF}" style="width:150px">
+                    <f:selectItems value="#{simonCtrl.filieres}"/>
+                </p:selectOneMenu>                
+                
+            </h:panelGrid>
+            
+            <p:separator/>
+            
+            <p:commandButton value="Ajouter" action="#{simonCtrl.addEtudiant()}" ajax="false"/>
+        </p:panel>
+    </h:form>
+    </h:body>
+</html>
+
